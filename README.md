@@ -33,6 +33,7 @@ ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'PASSWORD
 
 
 TO CHECK MYSQL in WEBINTERFACE:
+
 docker run --name phpmyadmin -d --link mysql:db -p 8080:80 phpmyadmin/phpmyadmin:latest
 
 
@@ -50,10 +51,15 @@ docker run -d -p 2181:2181 -p 9092:9092 --env ADVERTISED_HOST=kafka --env ADVERT
 SPRING: EMPLOYEE:
 
 mvn clean install
+
 docker build -f Dockerfile -t employeecontainer .
+
 docker run -t --name employeecontainer --link mysqlcontainer:mysql --link kafka:kafka  -p 8087:8095 employeecontainer
 
 SPRING:  EVENT:
+
 mvn clean install
+
 docker build -f Dockerfile -t eventcontainer .
+
 docker run -t --name eventcontainer --link mongo:mongo --link kafka:kafka  -p 8107:8107 eventcontainer
