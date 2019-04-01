@@ -24,13 +24,18 @@ STEP 2: Run Images:
 MYSQL: 
 
 docker run --name mysqlcontainer -e MYSQL_ROOT_PASSWORD=PASSWORD -e MYSQL_DATABASE=employee_management -p 3307:3307 -d mysql:latest
-docker exec -it mysql bash
-mysql -u root -pPASSWORD --protocol=tcp
-ALTER USER root IDENTIFIED WITH mysql_native_password BY 'PASSWORD';
-exit
-exit
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'PASSWORD'; 
 
+docker exec -it mysql bash
+
+mysql -u root -pPASSWORD --protocol=tcp
+
+ALTER USER root IDENTIFIED WITH mysql_native_password BY 'PASSWORD';
+
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'PASSWORD';
+
+exit
+
+exit
 
 TO CHECK MYSQL in WEBINTERFACE:
 
@@ -40,6 +45,7 @@ docker run --name phpmyadmin -d --link mysql:db -p 8080:80 phpmyadmin/phpmyadmin
 MONGO:
 
 mkdir data
+
 docker run --name mongo  -p 27017:27017  -d  -v  data:/data/db mongo
 
 
