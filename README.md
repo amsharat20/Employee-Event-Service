@@ -56,24 +56,24 @@ docker run -d -p 2181:2181 -p 9092:9092 --env ADVERTISED_HOST=kafka --env ADVERT
 
 SPRING: EMPLOYEE:
 
-mvn clean install
+          mvn clean install
 
-docker build -f Dockerfile -t employeecontainer .
+          docker build -f Dockerfile -t employeecontainer .
 
-docker run -d -t --name employeecontainer --link mysqlcontainer:mysql --link kafka:kafka  -p 8099:8099 employeecontainer
+          docker run -d -t --name employeecontainer --link mysqlcontainer:mysql --link kafka:kafka  -p 8099:8099 employeecontainer
 
 SPRING:  EVENT:
 
-mvn clean install
+        mvn clean install
 
-docker build -f Dockerfile -t eventcontainer .
+        docker build -f Dockerfile -t eventcontainer .
 
-docker run -d -t --name eventcontainer --link mongo:mongo --link kafka:kafka  -p 8107:8107 eventcontainer
+        docker run -d -t --name eventcontainer --link mongo:mongo --link kafka:kafka  -p 8107:8107 eventcontainer
 
 Swagger API:
-http://localhost:8099/swagger-ui.html#/ (Employee service) (admin/admin) Open in Incognito window.  *Authenticated.
+        http://localhost:8099/swagger-ui.html#/ (Employee service) (admin/admin) Open in Incognito window.  *Authenticated.
 
-http://localhost:8099/swagger-ui.html#/ (Event Service)
+        http://localhost:8107/swagger-ui.html#/ (Event Service)
 
 MySQL USER INTERFACE: http://localhost:8080/index.php (root/PASSWORD)
 
