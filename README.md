@@ -60,7 +60,7 @@ mvn clean install
 
 docker build -f Dockerfile -t employeecontainer .
 
-docker run -t --name employeecontainer --link mysqlcontainer:mysql --link kafka:kafka  -p 8087:8095 employeecontainer
+docker run -d -t --name employeecontainer --link mysqlcontainer:mysql --link kafka:kafka  -p 8087:8095 employeecontainer
 
 SPRING:  EVENT:
 
@@ -68,7 +68,7 @@ mvn clean install
 
 docker build -f Dockerfile -t eventcontainer .
 
-docker run -t --name eventcontainer --link mongo:mongo --link kafka:kafka  -p 8107:8107 eventcontainer
+docker run -d -t --name eventcontainer --link mongo:mongo --link kafka:kafka  -p 8107:8107 eventcontainer
 
 Swagger API:
 http://localhost:8099/swagger-ui.html#/ (Employee service) (admin/admin)
