@@ -1,7 +1,6 @@
 package com.employee.management.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,19 +52,19 @@ public class DepartmentController {
 	/*
 	 * Displaying Department by ID
 	 */
-	
-	  @GetMapping("/departments/{id}")
-	  
-	  @ApiOperation("Get department by Id") public ResponseEntity<Object>
-	  getDepartment(@PathVariable int id) throws RecordNotFoundException {
-	  
-	  logger.info("Received ID for department " +id); 
-	  Optional<Department> department = departmentService.getDepartment(id);
-	  if (department == null) { 
-		  throw new  RecordNotFoundException("Department is not Found. Please Check the department id again ");
-		  }
-	  return new ResponseEntity<Object>(department, HttpStatus.OK); }
-	 
+
+	@GetMapping("/departments/{id}")
+
+	@ApiOperation("Get department by Id") public ResponseEntity<Object>
+	getDepartment(@PathVariable int id) throws RecordNotFoundException {
+
+		logger.info("Received ID for department " +id); 
+
+		Department department = departmentService.getDepartment(id)
+				.orElseThrow(() -> new RecordNotFoundException("Department is not Found. Please Check the department id again : " + id));
+
+		return new ResponseEntity<Object>(department, HttpStatus.OK); }
+
 	/*
 	 * Adding Departments
 	 */

@@ -1,7 +1,6 @@
 package com.employee.management.controller;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -45,14 +44,14 @@ public class EmployeeController {
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
-	
+
 	@Autowired
 	private DepartmentRepository departmentRepository;
-	
+
 
 	@Autowired
 	KafkaTemplate<String, Event> kafkaTemplate;
-	
+
 	final static String KAFKA_TOPIC =  "employee-topic";
 
 	/*
@@ -78,7 +77,7 @@ public class EmployeeController {
 
 		Employee employee = 	employeeService.getEmployee(uuid)
 				.orElseThrow(() -> new RecordNotFoundException("Employee is not Found. Please Check the id again : " + uuid));
-		
+
 		return new ResponseEntity<Object>(employee, HttpStatus.OK);
 	}
 
@@ -87,20 +86,20 @@ public class EmployeeController {
 	 */
 	@PostMapping("/employees")
 	public ResponseEntity<Object> addEmployees(@RequestBody Employee employee) throws Exception {
-		
+
 		boolean checkEmail = validateEmail(employee.getEmail());
 		if(!checkEmail) {
 			throw new Exception("Email is not Valid");
 		}
-		
+
 		boolean checkDept = validateDepartmentId(employee.getDeptid());
 		logger.info("Department is present " + checkDept);
-		
+
 		try {
 			logger.info("Received request-body for employee " + employee);
 
-				employeeService.addEmployee(employee);
-			
+			employeeService.addEmployee(employee);
+
 		} catch (DataIntegrityViolationException e) {
 			ErrorResponse error = new ErrorResponse("Email ID already exists ! Please check ! ");
 			return new ResponseEntity<Object>(error, HttpStatus.CONFLICT);
@@ -126,12 +125,12 @@ public class EmployeeController {
 
 		Employee employee = employeeRepository.findById(uuid)
 				.orElseThrow(() -> new RecordNotFoundException("Employee Not Found : " + uuid));
-		
+
 		boolean checkEmail = validateEmail(updatedEmployee.getEmail());
 		if(!checkEmail) {
 			throw new Exception("Email is not Valid");
 		}
-		
+
 		boolean checkDept = validateDepartmentId(updatedEmployee.getDeptid());
 
 		employee.setBirthdate(updatedEmployee.getBirthdate());
@@ -140,8 +139,17 @@ public class EmployeeController {
 		employee.setFirstName(updatedEmployee.getFirstName());
 		employee.setLastName(updatedEmployee.getLastName()); 
 
-		employeeService.updateEmployee(employee, uuid);
+		try {
 
+			employeeService.updateEmployee(employee, uuid);
+
+		} catch (DataIntegrityViolationException e) {
+			ErrorResponse error = new ErrorResponse("Email ID already exists ! Please check ! ");
+			return new ResponseEntity<Object>(error, HttpStatus.CONFLICT);
+		} catch (Exception e) {
+			ErrorResponse error = new ErrorResponse("Entry Updation Failed. Server may be down. Try after sometime");
+			return new ResponseEntity<Object>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		kafkaTemplate.send(KAFKA_TOPIC,new Event("Event-Update",
 				employee.getUuid(), employee.getFirstName()+ "."+
 						employee.getLastName(), employee.getEmail(), "Employee Updated" )); 
@@ -159,7 +167,7 @@ public class EmployeeController {
 		return new ResponseEntity<Object>("All Employees deleted", HttpStatus.OK);
 	}
 
-	
+
 	/*
 	 * Delete employee by Id
 	 */
@@ -173,11 +181,11 @@ public class EmployeeController {
 
 		kafkaTemplate.send(KAFKA_TOPIC,new Event("Event-Delete",employee.getUuid(), employee.getFirstName()+ "."+
 				employee.getLastName(), employee.getEmail(), "Employee Deleted" ));
-		
+
 		return  new ResponseEntity<Object>("Employee deleted for ID" + uuid, HttpStatus.OK);
 	}
-	
-	
+
+
 	private boolean validateEmail(String emailCheck) {
 		String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+ 
 				"[a-zA-Z0-9_+&*-]+)*@" + 
@@ -187,16 +195,16 @@ public class EmployeeController {
 		if (emailCheck == null) {
 			return false; 
 		} else {
-		return pat.matcher(emailCheck).matches(); 
+			return pat.matcher(emailCheck).matches(); 
 		}
 	}
-	
-	
+
+
 	private boolean validateDepartmentId(int deptid) throws	RecordNotFoundException { 
 		logger.info("Inside Validate dept");
 		Department department = 	departmentRepository.findById(deptid)
 				.orElseThrow(() -> new RecordNotFoundException("Department Not Found. Please check : " + deptid));
-	    return true; 
+		return true; 
 	}
 }
 
