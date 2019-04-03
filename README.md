@@ -11,13 +11,10 @@ Steps:
 
 STEP 1: 
 
-docker pull mysql
-
-docker pull mongo
-
-docker pull spotify/kafka
-
-docker pull php
+          docker pull mysql
+          docker pull mongo
+          docker pull spotify/kafka
+          docker pull php
 
 STEP 2: Run Images:
 
