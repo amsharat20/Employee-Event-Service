@@ -1,0 +1,3 @@
+     Employee Service   :  SpringBoot + MYSQL + HTTP Authentication + Swagger +Docker
+     Event Service      :  SpringBoot + MONGODB + Swagger + Docker
+    Intermediate Broker :  Kafka
