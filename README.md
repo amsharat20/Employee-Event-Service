@@ -25,9 +25,9 @@ MYSQL:
 
 docker run --name mysqlcontainer -e MYSQL_ROOT_PASSWORD=PASSWORD -e MYSQL_DATABASE=employee_management -p 3307:3307 -d mysql:latest
 
-docker exec -it mysql bash
+docker exec -it mysqlcontainer bash
 
-mysql -u root -pPASSWORD --protocol=tcp
+mysql -u root -pPASSWORD
 
 ALTER USER root IDENTIFIED WITH mysql_native_password BY 'PASSWORD';
 
