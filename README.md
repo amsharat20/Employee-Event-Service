@@ -60,7 +60,7 @@ mvn clean install
 
 docker build -f Dockerfile -t employeecontainer .
 
-docker run -d -t --name employeecontainer --link mysqlcontainer:mysql --link kafka:kafka  -p 8087:8095 employeecontainer
+docker run -d -t --name employeecontainer --link mysqlcontainer:mysql --link kafka:kafka  -p 8099:8095 employeecontainer
 
 SPRING:  EVENT:
 
