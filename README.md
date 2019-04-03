@@ -39,7 +39,7 @@ exit
 
 TO CHECK MYSQL in WEBINTERFACE:
 
-docker run --name phpmyadmin -d --link mysql:db -p 8080:80 phpmyadmin/phpmyadmin:latest
+docker run --name phpmyadmin -d --link mysqlcontainer:db -p 8080:80 phpmyadmin/phpmyadmin:latest
 
 
 MONGO:
