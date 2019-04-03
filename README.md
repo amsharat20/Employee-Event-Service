@@ -71,8 +71,10 @@ docker build -f Dockerfile -t eventcontainer .
 docker run -t --name eventcontainer --link mongo:mongo --link kafka:kafka  -p 8107:8107 eventcontainer
 
 Swagger API:
-http://localhost:8099/swagger-ui.html#/ (Employee service)
+http://localhost:8099/swagger-ui.html#/ (Employee service) (admin/admin)
 http://localhost:8099/swagger-ui.html#/ (Event Service)
+
+MySQL USER INTERFACE: http://localhost:8080/index.php (root/PASSWORD)
 
 Authentication for Swagger APIs:
 username: admin
